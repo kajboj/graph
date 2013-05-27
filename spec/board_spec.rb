@@ -36,11 +36,12 @@ describe 'Dijkstra on large board' do
 
     its(:dump) do
       should == [
-        '   o--F',
-        '   |  |',
-        'o--o--o',
-        '|     |',
-        'S     o',
+        '   o--F  ',
+        '   |  |  ',
+        'o--o--o  ',
+        '|     |  ',
+        'S     o  ',
+        '         '
       ].join("\n")
     end
   end
