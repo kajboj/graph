@@ -12,6 +12,7 @@ class Dijkstra
     set_distance current_node, 0.0
 
     while current_node != @end_node
+      yield(graph, current_node, @unvisited) if block_given?
       current_distance = get_distance current_node
 
       @graph.rels(current_node).each do |rel|
