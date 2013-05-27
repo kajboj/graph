@@ -11,9 +11,6 @@ class Board
     @row_count = board.size
     @column_count = board.first.size
 
-    @start_node = Node.new 'S'
-    @end_node   = Node.new 'F'
-
     @graph = UndirectedGraph.new
     @nodes = create_nodes board
     connect_nodes
@@ -25,13 +22,13 @@ class Board
     end
   end
 
-  def dump
+  def dump &blk
     @nodes.map.with_index do |row, row_i|
       top    = ''
       bottom = ''
       row.each.with_index do |node, node_i|
         if node
-          top += node.value[:type]
+          top += block_given? ? yield(node) : node.value[:type]
           top += right(row_i, node_i) ? '--' : '  '
           bottom += lower(row_i, node_i) ? '|  ' : '   '
         else
@@ -51,7 +48,10 @@ class Board
     board.map.with_index do |row, row_i|
       row.map.with_index do |cell, cell_i|
         type = NODE_TYPES[cell]
-        type ? Node.new(row: row_i, col: cell_i, type: type) : nil
+        node = type ? Node.new(row: row_i, col: cell_i, type: type) : nil
+        @start_node  = node if type == 'S'
+        @end_node = node if type == 'F'
+        node
       end
     end
   end

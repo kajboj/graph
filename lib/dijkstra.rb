@@ -12,7 +12,7 @@ class Dijkstra
     set_distance current_node, 0.0
 
     while current_node != @end_node
-      yield(graph, current_node, @unvisited) if block_given?
+      yield(@graph, current_node, @unvisited) if block_given?
       current_distance = get_distance current_node
 
       @graph.rels(current_node).each do |rel|
@@ -48,6 +48,7 @@ class Dijkstra
 
   def mark_visited node
     @unvisited.delete node
+    node.value[:visited] = true
   end
 
   def mark_all_nodes_unvisited
@@ -62,10 +63,10 @@ class Dijkstra
 
   def set_distance_on_all_nodes_to_infinity
     @graph.nodes.each do |node|
-      node.value = {
-        name:     node.value,
-        distance: Float::INFINITY
-      }
+      unless node.value.is_a? Hash
+        node.value = { name: node.value }
+      end
+      node.value[:distance] = Float::INFINITY
     end
   end
 

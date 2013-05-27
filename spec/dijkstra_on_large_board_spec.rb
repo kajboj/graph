@@ -11,16 +11,26 @@ describe 'Dijkstra on large board' do
       %w(- - - - - -),
       %w(- - - - - -),
       %w(S - - - - -),
-    ]).graph
+    ])
   end
 
+  let(:graph) { board.graph }
+
   let(:subject) do
-    Dijkstra.new board, start, finish
+    Dijkstra.new graph, board.start_node, board.end_node
   end
 
   specify do
     subject.shortest_path_length do |graph, current_node, unvisited|
-      puts 'step'
+      s = board.dump do |node|
+        node_type = node.value[:type]
+        if node_type == 'o' && node.value[:visited]
+          'X'
+        else
+          node_type
+        end
+      end
+      puts s
     end
   end
 end
