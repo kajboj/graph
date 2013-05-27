@@ -9,6 +9,7 @@ describe Graph do
 
   describe 'empty' do
     specify { subject.rels(a).should == [] }
+    specify { subject.nodes  .should == [] }
   end
 
   context 'with two nodes and one edge' do
@@ -17,7 +18,13 @@ describe Graph do
     specify { subject.rels(a).count.should == 1 }
     specify { subject.rels(a).first.end_node.should == b }
 
-    its(:dump) { should == 'a ---3--> b' }
+    its(:dump)  { should == 'a ---3--> b' }
+    its(:nodes) { should == [a, b] }
+
+    specify 'dump_with_block' do
+      dump = subject.dump { |v| "(#{v})" }
+      dump.should == '(a) ---3--> (b)'
+    end
   end
 
   context 'with two nodes and two edges' do
@@ -36,6 +43,7 @@ describe Graph do
         'b ---5--> a'
       ].join("\n")
     end
+    its(:nodes) { should == [a, b] }
   end
 
   context 'with three nodes and two edges (a---->b---->c)' do
@@ -56,5 +64,6 @@ describe Graph do
         'b ---5--> c'
       ].join("\n")
     end
+    its(:nodes) { should == [a, b, c] }
   end
 end

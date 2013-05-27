@@ -1,10 +1,11 @@
 class Graph
   def initialize
-    @g = {}
+    @graph = {}
+    @nodes = []
   end
 
   def rels node
-    related_nodes = @g[node]
+    related_nodes = @graph[node]
     return [] unless related_nodes
 
     related_nodes.map do |other_node, rel_value|
@@ -13,21 +14,32 @@ class Graph
   end
 
   def add start_node, rel, end_node
-    @g[start_node] ||= {}
-    @g[start_node][end_node] = rel
+    add_nodes start_node, end_node
+
+    @graph[start_node] ||= {}
+    @graph[start_node][end_node] = rel
   end
 
-  def dump
+  def dump &blk
     lines = []
-    @g.each do |node, rels|
+    @graph.each do |node, rels|
+      node_string = block_given? ? yield(node.value) : node.value
       rels.each do |other_node, rel_value|
-        lines << "#{node.value} ---#{rel_value}--> #{other_node.value}"
+        other_node_string = block_given? ? yield(other_node.value) : other_node.value
+        lines << "#{node_string} ---#{rel_value}--> #{other_node_string}"
       end
     end
     return lines.join "\n"
   end
 
+  attr_reader :nodes
+
   private
+
+  def add_nodes *nodes
+    @nodes += nodes
+    @nodes.uniq!
+  end
 end
 
 class Node
@@ -46,4 +58,11 @@ class Relationship
 
   attr_reader :start_node, :end_node
   attr_accessor :value
+end
+
+class UndirectedGraph < Graph
+  def add start_node, rel, end_node
+    super start_node, rel, end_node
+    super end_node,   rel, start_node
+  end
 end

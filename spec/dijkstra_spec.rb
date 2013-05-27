@@ -3,31 +3,30 @@ require_relative '../lib/dijkstra.rb'
 
 describe Dijkstra do
   let(:graph) do
-    Graph.new.tap do |g|
-      g.add 1,  7, 2
-      g.add 1,  9, 3
-      g.add 1, 14, 6
-      g.add 2,  7, 1
-      g.add 2, 10, 3
-      g.add 2, 15, 4
-      g.add 3,  9, 1
-      g.add 3, 10, 2
-      g.add 3, 11, 4
-      g.add 3,  2, 6
-      g.add 4, 15, 2
-      g.add 4, 11, 3
-      g.add 4,  6, 5
-      g.add 5,  6, 4
-      g.add 5,  9, 6
-      g.add 6, 14, 1
-      g.add 6,  2, 3
-      g.add 6,  9, 5
+    UndirectedGraph.new.tap do |g|
+      g.add n1,  7, n2
+      g.add n1,  9, n3
+      g.add n1, 14, n6
+      g.add n2, 10, n3
+      g.add n2, 15, n4
+      g.add n3, 11, n4
+      g.add n3,  2, n6
+      g.add n4,  6, n5
+      g.add n5,  9, n6
     end
   end
 
   let(:subject) do
-    Dijkstra.new graph, 1, 5
+    Dijkstra.new graph, n1, n5
   end
 
   its(:shortest_path_length) { should == 20 }
+
+  def n v; Node.new v; end
+  let(:n1) { n 1 }
+  let(:n2) { n 2 }
+  let(:n3) { n 3 }
+  let(:n4) { n 4 }
+  let(:n5) { n 5 }
+  let(:n6) { n 6 }
 end
