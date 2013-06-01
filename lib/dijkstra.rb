@@ -4,7 +4,7 @@ class Dijkstra
       graph, start_node, end_node
   end
 
-  def shortest_path_length
+  def run
     set_distance_on_all_nodes_to_infinity
     mark_all_nodes_unvisited
 
@@ -21,6 +21,7 @@ class Dijkstra
 
           if new_distance < get_distance(node)
             set_distance node, new_distance
+            set_previous node, current_node
           end
         end
       end
@@ -28,8 +29,18 @@ class Dijkstra
       current_node = pick_unvisited_node
       yield(@graph, current_node, @unvisited) if block_given?
     end
+  end
 
-    get_distance current_node
+  def shortest_path_length
+    get_distance @end_node
+  end
+
+  def shortest_path
+    path = [@end_node]
+    while path.last != @start_node
+      path << path.last.value[:previous]
+    end
+    path.reverse
   end
 
   private
@@ -72,6 +83,10 @@ class Dijkstra
 
   def set_distance node, distance
     node.value[:distance] = distance
+  end
+
+  def set_previous node, previous_node
+    node.value[:previous] = previous_node
   end
 
   def get_distance node

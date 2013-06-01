@@ -20,7 +20,18 @@ describe Dijkstra do
     Dijkstra.new graph, n1, n5
   end
 
+  before do
+    subject.run
+  end
+
   its(:shortest_path_length) { should == 20 }
+  its(:shortest_path) { should == [n1, n3, n6, n5] }
+
+  specify do
+    subject.shortest_path.map do |node|
+      node.value[:name]
+    end.should == [1, 3, 6, 5]
+  end
 
   def n v; Node.new v; end
   let(:n1) { n 1 }

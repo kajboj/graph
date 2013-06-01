@@ -1,8 +1,9 @@
 require_relative '../lib/graph.rb'
 require_relative '../lib/board.rb'
+require_relative '../lib/board_dumper.rb'
 require_relative '../lib/dijkstra.rb'
 
-describe 'Dijkstra on large board' do
+describe Board do
   context '2x2' do
     subject do
       Board.new([
@@ -36,11 +37,11 @@ describe 'Dijkstra on large board' do
 
     its(:dump) do
       should == [
-        '   o--F  ',
+        '   +--F  ',
         '   |  |  ',
-        'o--o--o  ',
+        '+--+--+  ',
         '|     |  ',
-        'S     o  ',
+        'S     +  ',
         '         '
       ].join("\n")
     end

@@ -23,24 +23,10 @@ class Board
   end
 
   def dump &blk
-    @nodes.map.with_index do |row, row_i|
-      top    = ''
-      bottom = ''
-      row.each.with_index do |node, node_i|
-        if node
-          top += block_given? ? yield(node) : node.value[:type]
-          top += right(row_i, node_i) ? '--' : '  '
-          bottom += lower(row_i, node_i) ? '|  ' : '   '
-        else
-          top    += '   '
-          bottom += '   '
-        end
-      end
-      [top, bottom].join "\n"
-    end.join("\n")
+    BoardDumper.new(self).dump &blk
   end
 
-  attr_reader :graph, :start_node, :end_node
+  attr_reader :graph, :start_node, :end_node, :nodes
 
   private
 
@@ -50,7 +36,7 @@ class Board
         type = NODE_TYPES[cell]
         node = type ? Node.new(row: row_i, col: cell_i, type: type) : nil
         @start_node  = node if type == 'S'
-        @end_node = node if type == 'F'
+        @end_node    = node if type == 'F'
         node
       end
     end
@@ -69,14 +55,5 @@ class Board
     return unless @nodes[row1] && @nodes[row1][col1] && @nodes[row2] && @nodes[row2][col2]
 
     @graph.add @nodes[row1][col1], 1, @nodes[row2][col2]
-  end
-
-  def right row, col
-    @nodes[row][col+1]
-  end
-
-  def lower row, col
-    return unless @nodes[row+1]
-    @nodes[row+1][col]
   end
 end

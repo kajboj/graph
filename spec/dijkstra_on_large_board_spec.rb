@@ -1,5 +1,6 @@
 require_relative '../lib/graph.rb'
 require_relative '../lib/board.rb'
+require_relative '../lib/board_dumper.rb'
 require_relative '../lib/dijkstra.rb'
 
 describe 'Dijkstra on large board' do
@@ -15,15 +16,17 @@ describe 'Dijkstra on large board' do
     board[0][0] = 'S'
     board[board.size-1][board.first.size - 1] = 'F'
     Board.new board
+  end
 
-    # Board.new([
-    #   %w(X X - - - F),
-    #   %w(X X - X X X),
-    #   %w(X X - X X X),
-    #   %w(X X - - - X),
-    #   %w(X X X X - X),
-    #   %w(S - - - - X),
-    # ])
+  let(:board1) do
+    Board.new([
+      %w(X X - - - F),
+      %w(X X - X X X),
+      %w(X X - X X X),
+      %w(X X - - - -),
+      %w(X X - X X -),
+      %w(S - - - - -),
+    ])
   end
 
   let(:graph) { board.graph }
@@ -33,14 +36,28 @@ describe 'Dijkstra on large board' do
   end
 
   specify do
-    subject.shortest_path_length do |graph, current_node, unvisited|
-      s = board.dump do |node|
-        node_type = node.value[:type]
-        node.value[:visited] ? 'X' : node_type
-      end
-      puts s
-      puts "(#{current_node.value[:row]}, #{current_node.value[:col]})"
-      sleep 0.05
+    dumper = BoardDumper.new board
+
+    subject.run do |graph, current_node, unvisited|
+      # s = dumper.dump do |node|
+      #   'x' if node.value[:visited]
+      # end
+      # puts s
+      # sleep 0.05
     end
+
+    path = subject.shortest_path
+    puts path.size.inspect
+
+    s = dumper.dump do |node|
+      if path.include? node
+        'O'
+      elsif node.value[:visited]
+        'x'
+      end
+    end
+    puts s
+
+    puts "shortest path length = #{subject.shortest_path_length}"
   end
 end
