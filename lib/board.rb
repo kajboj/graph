@@ -4,7 +4,7 @@ class Board
   NODE_TYPES = {
     'S' => 'S',
     'F' => 'F',
-    '-' => 'o',
+    '-' => '+',
   }
 
   def initialize board

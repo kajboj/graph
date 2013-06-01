@@ -11,8 +11,7 @@ class Dijkstra
     current_node = @start_node
     set_distance current_node, 0.0
 
-    while current_node != @end_node
-      yield(@graph, current_node, @unvisited) if block_given?
+    while (current_node != @end_node) && (get_distance(current_node) != Float::INFINITY)
       current_distance = get_distance current_node
 
       @graph.rels(current_node).each do |rel|
@@ -26,7 +25,8 @@ class Dijkstra
         end
       end
       mark_visited current_node
-      current_node = nearest_unvisited_node
+      current_node = pick_unvisited_node
+      yield(@graph, current_node, @unvisited) if block_given?
     end
 
     get_distance current_node
@@ -55,7 +55,7 @@ class Dijkstra
     @unvisited = @graph.nodes.dup
   end
 
-  def nearest_unvisited_node
+  def pick_unvisited_node
     @unvisited.min_by do |node|
       get_distance node
     end

@@ -4,14 +4,26 @@ require_relative '../lib/dijkstra.rb'
 
 describe 'Dijkstra on large board' do
   let(:board) do
-    Board.new([
-      %w(- - - - - F),
-      %w(- - - - - -),
-      %w(- - - - - -),
-      %w(- - - - - -),
-      %w(- - - - - -),
-      %w(S - - - - -),
-    ])
+    board = []
+    16.times do |r|
+      32.times do |c|
+        board[r] ||= []
+        board[r][c] = %w(X - - - - -).sample
+      end
+    end
+
+    board[0][0] = 'S'
+    board[board.size-1][board.first.size - 1] = 'F'
+    Board.new board
+
+    # Board.new([
+    #   %w(X X - - - F),
+    #   %w(X X - X X X),
+    #   %w(X X - X X X),
+    #   %w(X X - - - X),
+    #   %w(X X X X - X),
+    #   %w(S - - - - X),
+    # ])
   end
 
   let(:graph) { board.graph }
@@ -24,13 +36,11 @@ describe 'Dijkstra on large board' do
     subject.shortest_path_length do |graph, current_node, unvisited|
       s = board.dump do |node|
         node_type = node.value[:type]
-        if node_type == 'o' && node.value[:visited]
-          'X'
-        else
-          node_type
-        end
+        node.value[:visited] ? 'X' : node_type
       end
       puts s
+      puts "(#{current_node.value[:row]}, #{current_node.value[:col]})"
+      sleep 0.05
     end
   end
 end
