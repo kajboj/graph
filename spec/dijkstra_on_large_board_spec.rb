@@ -47,7 +47,6 @@ describe 'Dijkstra on large board' do
     end
 
     path = subject.shortest_path
-    puts path.size.inspect
 
     s = dumper.dump do |node|
       if path.include? node

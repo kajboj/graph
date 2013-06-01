@@ -14,7 +14,6 @@ describe Grid do
         '        ',
         '        ',
         '        ',
-    s = blank_board
         '        ',
       ].join("\n")
     end

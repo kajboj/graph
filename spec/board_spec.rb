@@ -37,12 +37,12 @@ describe Board do
 
     its(:dump) do
       should == [
-        '   +--F  ',
-        '   |  |  ',
-        '+--+--+  ',
-        '|     |  ',
-        'S     +  ',
-        '         '
+        '  +-F ',
+        '  | | ',
+        '+-+-+ ',
+        '|   | ',
+        'S   + ',
+        '      '
       ].join("\n")
     end
   end

@@ -6,7 +6,7 @@ class BoardDumper
   end
 
   def dump &blk
-    grid = Grid.new height, width, 2, 3
+    grid = Grid.new height, width, 2, 2
 
     each_node do |node, row, col|
       render_node grid, row, col, &blk
@@ -32,8 +32,8 @@ class BoardDumper
     from_block = block_given? ? yield(node) : nil
 
     top = from_block || node.value[:type]
-    top += right(row, col) ? '--'  : '  '
-    bottom = lower(row, col) ? '|  ' : '   '
+    top += right(row, col) ? '-'  : ' '
+    bottom = lower(row, col) ? '| ' : '  '
 
     grid.fill row, col, [top, bottom]
   end
